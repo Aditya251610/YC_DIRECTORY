@@ -1,17 +1,39 @@
 "use client";
 
-import React, { useState } from 'react'
+import React, { useActionState, useState } from 'react'
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import MDEditor from '@uiw/react-md-editor'
 import { Button } from './ui/button';
 import {Send} from 'lucide-react'
+import { formSchema } from '@/lib/validation';
 
 const StartupForm = () => {
 
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [pitch, setPitch] = useState("");
-    const isPending = false
+    const handelFormSubmit = async (prevState: any, formData: FormData) => {
+        try{
+            const formValues = {
+                title: formData.get("title") as string,
+                description: formData.get("category") as string,
+                link: formData.get("link") as string,
+                pitch
+            }
+
+            await formSchema.parseAsync(formValues)
+
+            console.log(formValues)
+
+            // const result = await createIdea(prevState,formData, pitch)
+            // console.log(result)
+        } catch(error){
+
+        } finally {
+
+        }
+    }
+    const [state, formAction, isPending] = useActionState(handelFormSubmit, {error: "", status: "INITIAL"});
 
   return (
     <form action={() => {}} className='startup-form'>
